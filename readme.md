@@ -2,8 +2,9 @@
 > Purpose of this application is to build a Ticketing Website to demonstrate various methods of integration with Protecht solutions. 
 
 ## Architecture
-
-
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/8760590/160291545-0baab474-5f72-4276-b031-013a562d101a.png" width=450 height=300>
+</p>
 
 ## Entity Relationship Diagram (ERD)
 <p align="center">
