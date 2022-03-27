@@ -20,3 +20,11 @@
 <p align="center">
     <img src="https://user-images.githubusercontent.com/8760590/160291107-d0181c57-c186-46b5-9fc5-811df03c389b.png" width=450 height=300>
 </p>
+
+<hr>
+
+# Authentication Service
+
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/8760590/160296715-73eea169-5536-4e38-bd04-84def9626a9e.png" width=450 height=200>
+</p>
