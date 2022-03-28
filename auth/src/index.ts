@@ -5,5 +5,5 @@ const app = express()
 app.use(json())
 
 app.listen(3000, ()=>{
-    console.log(`Auth service is up and listening on port 3000`)
+    console.log(`Auth service is up and listening on port 3000!!!!!!!`)
 })

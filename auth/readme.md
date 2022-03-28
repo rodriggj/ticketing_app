@@ -1,6 +1,6 @@
 # Authentication Service
 
-## Dependencies
+## Create Bolierplate code for Auth Service
 1. Create a `package.json` file with the command: 
 ```s
 npm init -y
@@ -44,3 +44,127 @@ app.listen(3000, ()=>{
 ```s
 npm run start
 ```
+
+## K8 Setup for Auth Service
+1. Create `Dockerfile` with the `auth` subfolder
+```s
+touch Dockerfile
+```
+
+2. Configure `Dockerfile`
+```dockerfile
+FROM node:alpine
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . . 
+
+CMD ["npm", "start"]
+```
+
+3. Create a `.dockerignore` to prevent `node_modules` from being uploaded into docker image at impage build. 
+```s
+touch .dockerignore
+```
+
+4. Open the `.dockerignore` file and ensure `node_modules` is listed 
+```docker
+*/node_modules
+./node_modules
+```
+
+5. Test the `docker` image build 
+
+```s
+docker build -t rodriggj/ticketing:auth .
+```
+
+6. Now we need to create a deployment in a directory that we will create called `infra` that will house all our deploymnet configurations in kubernetes. Run the following commands
+```s
+cd ..       # you want to be on same directory level as `auth`
+mkdir infra
+cd infra
+mkdir k8s
+cd k8s
+touch auth-depl.yaml
+```
+
+7. We need to configure our `auth-depl.yaml` file with a `Deployment`. Enter the following code. 
+
+```yaml
+apiVersion: app/v1
+kind: Deployment
+metadata: 
+  name: auth-depl
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: auth
+  template: 
+    metadata: 
+      labels: 
+        app: auth
+    spec: 
+      containers: 
+        - name: auth
+          image: rodriggj/ticketing:auth
+```
+
+8. Now we need to configure our `Service` to accompany our `Deployment`. To do this, on  the same file below Step 7, enter: 
+
+```yaml
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: auth-srv
+spec: 
+  selector: 
+    app: auth
+  ports: 
+    - name: auth
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+```
+
+9. Now we will configure a 3rd party package called `Skaffold` that will watch our `infra` folder along with any code changes committed to our `Auth` service. It will ensure that any code commits get rounted to the Docker container image we configured, and is then deployed to the `Auth` service K8 cluster. Navigate to the same directory level of the `auth` & `infra` subfolders and create a .yaml file for the `skaffold` configuration
+
+```
+cd .. & cd ..
+touch skaffold.yaml
+```
+
+10. Now we want to enter the following configuration for our `skaffold.yaml` deployment
+
+```yaml
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl: 
+    manifests:
+      - ./infra/k8s/*
+build: 
+  local:
+    push: false
+  artifacts:
+    - image: rodriggj/ticketing:auth
+      context: auth
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
+        manual: 
+          - src: 'src/**/*.ts'
+            dest: .
+```
+
+11. Now we want to run `skaffold` and make sure we can get our `Auth` service deployed using the current configuration. 
+
+## K8 Nginx-Ingress Server Configuration
+1. Ensure that the `nginx-ingress` controller is installed. See deployment documentation [here](https://kubernetes.github.io/ingress-nginx/deploy/#quick-start)
+```s
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.2/deploy/static/provider/cloud/deploy.yaml
+```
+
+2. 
