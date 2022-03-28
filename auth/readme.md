@@ -269,7 +269,7 @@ gcloud auth login
 gcloud init
 ```
 
-> NOTE: If you use the connection string provided in the GCP dashboard, the gcloud command will appear as below. 
+> NOTE: If you use the connection string provided in the GCP dashboard, the gcloud command will appear as below. This connection string is required **IF** you are running Docker Desktop. 
 ```s
 gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project ticketing-dev-345513
 ```
