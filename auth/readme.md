@@ -162,7 +162,7 @@ build:
 
 11. Now we want to run `skaffold` and make sure we can get our `Auth` service deployed using the current configuration. 
 
-## Authentication Service Route configuration
+## NGINX Ingress Controller Configuration
 1. Ensure that the `nginx-ingress` controller is installed. See deployment documentation [here](https://kubernetes.github.io/ingress-nginx/deploy/#quick-start)
 ```s
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.2/deploy/static/provider/cloud/deploy.yaml
@@ -217,3 +217,25 @@ app.get('/api/users/currentuser', (req, res) => {
 5. In your browser navigate to a url called `ticketing.dev/api/users/currentuser` 
 
 > NOTE: If you attempted to nav to this location in google chrome you will receive an Error. This is because the `nginx-ingress` controller is attempting to use a `self-signed` certificate to render the url location, which Google Chrome securtiy will not allow. To bypass this error click on any area of the browser screen and type `thisisunsafe`, and the route hanlder will provide the callback response. 
+
+## Google Cloud Provider - Dev Environment Configuration
+
+1. Need to sign-up for Google Cloud Provider (GCP) account [here](https://cloud.google.com/free)
+
+2. Once signed up, on the Dashboard panel, scroll down to `Compute` / `Kubernetes Engine` / `Clusters` / `Enable` / `Create Cluster`
+
+3. There are 2 modalities `Standard` & `Autopilot` Configuration. Choose `Standard`.
+
+4. Configure `Cluster Basics` form: 
+- [ ] `Name`: ticketing-dev
+- [ ] `Location Type`: us-central-c
+- [ ] `Master Version` / `Static Version` : 1.21.9-gke. 1002(default) 
+
+5. Click `Node Pools` / `default pool` on the left nav pane 
+- [ ] `Size` / `Number of Nodes` : 3
+
+6. Click `Nodes` on left nav pane
+- [ ] `Series` : N1
+- [ ] `Machine Type`: g1-small (1 vCPU, 1.7 GB Memory)
+- [ ] Click `Create`
+
