@@ -39,6 +39,7 @@ app.listen(3000, ()=>{
   "scripts": {
     "start": "ts-node-dev src/index.ts"
   },
+```
 
 7. Test the `Auth Service` by running the start script. In the terminal nav to the _auth_ subfolder and run the following: 
 ```s
