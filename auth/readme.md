@@ -162,7 +162,7 @@ build:
 
 11. Now we want to run `skaffold` and make sure we can get our `Auth` service deployed using the current configuration. 
 
-## Authentication Service Route configuration
+## NGINX Ingress Controller Configuration
 1. Ensure that the `nginx-ingress` controller is installed. See deployment documentation [here](https://kubernetes.github.io/ingress-nginx/deploy/#quick-start)
 ```s
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.2/deploy/static/provider/cloud/deploy.yaml
@@ -217,3 +217,55 @@ app.get('/api/users/currentuser', (req, res) => {
 5. In your browser navigate to a url called `ticketing.dev/api/users/currentuser` 
 
 > NOTE: If you attempted to nav to this location in google chrome you will receive an Error. This is because the `nginx-ingress` controller is attempting to use a `self-signed` certificate to render the url location, which Google Chrome securtiy will not allow. To bypass this error click on any area of the browser screen and type `thisisunsafe`, and the route hanlder will provide the callback response. 
+
+## Google Cloud Provider - Dev Environment Configuration
+
+1. Need to sign-up for Google Cloud Provider (GCP) account [here](https://cloud.google.com/free)
+
+2. Once signed up, on the Dashboard panel, scroll down to `Compute` / `Kubernetes Engine` / `Clusters` / `Enable` / `Create Cluster`
+
+3. There are 2 modalities `Standard` & `Autopilot` Configuration. Choose `Standard`.
+
+4. Configure `Cluster Basics` form: 
+- [ ] `Name`: ticketing-dev
+- [ ] `Location Type`: us-central-c
+- [ ] `Master Version` / `Static Version` : 1.21.9-gke. 1002(default) 
+
+5. Click `Node Pools` / `default pool` on the left nav pane 
+- [ ] `Size` / `Number of Nodes` : 3
+
+6. Click `Nodes` on left nav pane
+- [ ] `Series` : N1
+- [ ] `Machine Type`: g1-small (1 vCPU, 1.7 GB Memory)
+- [ ] Click `Create`
+
+7. If you haven't already, you need to utilize the `gcloud` CLI extension to authenticate to your GCP account
+```s 
+gcloud auth login
+```
+
+> The login process will redirect you to a Google Account to authenticate to the GCP Project. The result of this process will be a URL build that is provided as a response. Example: [here](https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=32555940559.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8085%2F&scope=openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fappengine.admin+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcompute+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Faccounts.reauth&state=tT2esqTZeCsTXJ2Ip7vETIIa0uxDcW&access_type=offline&code_challenge=_O0WmtRM_JS8bZRvwDXGGsy54hG7h4uqOECEM-VNv0w&code_challenge_method=S256)
+
+> NOTE: Authentication reference material can be found [here](https://cloud.google.com/sdk/auth_success)
+
+8. After you've authenticated you need to configure the project you intend to connect to: 
+```s
+gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project ticketing-dev-345513
+```
+
+9. Now you can validate the k8 cluster you created you can view locally. Here we don't have any pods deployed to our cluster so running `kubectl get pods` won't work, but we can run `kubectl get nodes` to validate that 1. we can connect to our GCP cluster, and 2. that the number of nodes are 3
+
+```s
+kubectl get nodes 
+```
+
+> RESULTS IN: 
+```s
+grodriguez@Scotts-MacBook-Pro ticketing_app % kubectl get pods
+No resources found in default namespace.
+grodriguez@Scotts-MacBook-Pro ticketing_app % kubectl get nodes
+NAME                                       STATUS   ROLES    AGE   VERSION
+gke-cluster-1-default-pool-d8a018f7-04l3   Ready    <none>   14m   v1.21.9-gke.1002
+gke-cluster-1-default-pool-d8a018f7-05f9   Ready    <none>   14m   v1.21.9-gke.1002
+gke-cluster-1-default-pool-d8a018f7-1j6d   Ready    <none>   14m   v1.21.9-gke.1002
+```
