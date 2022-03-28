@@ -239,16 +239,37 @@ app.get('/api/users/currentuser', (req, res) => {
 - [ ] `Machine Type`: g1-small (1 vCPU, 1.7 GB Memory)
 - [ ] Click `Create`
 
-7. If you haven't already, you need to utilize the `gcloud` CLI extension to authenticate to your GCP account
+> NOTE: Your cluster may take a few minutes to initialize. 
+
+## Configure Kubectl Contexts for connecting to GCP
+
+A context is effectively a configured connection to a k8 cluster. Right now we want to connect to the GCP (cloud cluster) via our local desktop. To do this `docker-desktop` creates a `docker-desktop` context. We want to configure a _context_ specifically for connecting to our `ticketing-dev` cluster. 
+
+1. First we need to install the GCP SDK which can be found [here](https://cloud.google.com/sdk/docs/install-sdk)
+> NOTE: if running MacOS requires a `python` installation of 2.7.9 or higher. Recommended 3.7. View python verison by running `python -version`
+
+2. Follow the instructions for installation based on the OS are running on your local. To validate that the installation was configured correct run the following command: 
+```s
+gcloud --help
+```
+
+3.  Start to use the GCP SDK by logging in and following the profile wizard
 ```s 
 gcloud auth login
 ```
+
+> NOTE: You have to login to the same gmail account used to create the GCP cluster.
 
 > The login process will redirect you to a Google Account to authenticate to the GCP Project. The result of this process will be a URL build that is provided as a response. Example: [here](https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=32555940559.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8085%2F&scope=openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fappengine.admin+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcompute+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Faccounts.reauth&state=tT2esqTZeCsTXJ2Ip7vETIIa0uxDcW&access_type=offline&code_challenge=_O0WmtRM_JS8bZRvwDXGGsy54hG7h4uqOECEM-VNv0w&code_challenge_method=S256)
 
 > NOTE: Authentication reference material can be found [here](https://cloud.google.com/sdk/auth_success)
 
-8. After you've authenticated you need to configure the project you intend to connect to: 
+8. After you've authenticated you need to configure the project you intend to connect to. The SDK will provide a terminal wizard to configure th context creation process.
+```s
+gcloud init
+```
+
+> NOTE: If you use the connection string provided in the GCP dashboard, the gcloud command will appear as below. 
 ```s
 gcloud container clusters get-credentials cluster-1 --zone us-central1-c --project ticketing-dev-345513
 ```
