@@ -162,10 +162,58 @@ build:
 
 11. Now we want to run `skaffold` and make sure we can get our `Auth` service deployed using the current configuration. 
 
-## K8 Nginx-Ingress Server Configuration
+## Authentication Service Route configuration
 1. Ensure that the `nginx-ingress` controller is installed. See deployment documentation [here](https://kubernetes.github.io/ingress-nginx/deploy/#quick-start)
 ```s
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.2/deploy/static/provider/cloud/deploy.yaml
 ```
 
-2. 
+2. Inside the `infra/k8s/` folder you want to create another config file called `ingress-srv.yaml` and input the following code: 
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+    - host: ticketing.dev
+      http:
+        paths:
+          - path: /api/users/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3000
+```
+
+3. You now need to open your local copy of the `nginx-host` config file and ensure that the host name you provide routes traffic to your _nginx-ingress_ server running on your host k8 cluster. To do this you need to nav to `/etc/hosts` on your local filesystem. 
+
+```s
+sudo su
+nano /etc/hosts
+```
+
+When the file opens in the _nano text editor_, enter near the bottom of the file the following: 
+```s
+127.0.0.1 ticketing.dev
+```
+
+4. Now that we've routed traffic back through our local instance of an `nginx-ingress` controller, we need to ensure there is a route that will handle the request. In your `index.ts` file, enter the following code for a route handler: 
+
+```javascript
+app.get('/api/users/currentuser', (req, res) => {
+  res.send('Hello from the Authentication current user route.')
+})
+```
+
+> NOTE: You can't access this route if your server isn't running so ensure that you run `skaffold dev` in your console to initate the route.
+
+5. In your browser navigate to a url called `ticketing.dev/api/users/currentuser` 
+
+> NOTE: If you attempted to nav to this location in google chrome you will receive an Error. This is because the `nginx-ingress` controller is attempting to use a `self-signed` certificate to render the url location, which Google Chrome securtiy will not allow. To bypass this error click on any area of the browser screen and type `thisisunsafe`, and the route hanlder will provide the callback response. 
