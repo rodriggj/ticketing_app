@@ -244,7 +244,7 @@ app.get('/api/users/currentuser', (req, res) => {
 gcloud auth login
 ```
 
-> The login process will redirect you to a Google Account to authenticate to the GCP Project. The result of this process will be a URL build that is provided as a response. Example:  https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=32555940559.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8085%2F&scope=openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fappengine.admin+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcompute+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Faccounts.reauth&state=tT2esqTZeCsTXJ2Ip7vETIIa0uxDcW&access_type=offline&code_challenge=_O0WmtRM_JS8bZRvwDXGGsy54hG7h4uqOECEM-VNv0w&code_challenge_method=S256
+> The login process will redirect you to a Google Account to authenticate to the GCP Project. The result of this process will be a URL build that is provided as a response. Example: [here](https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=32555940559.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8085%2F&scope=openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fappengine.admin+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcompute+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Faccounts.reauth&state=tT2esqTZeCsTXJ2Ip7vETIIa0uxDcW&access_type=offline&code_challenge=_O0WmtRM_JS8bZRvwDXGGsy54hG7h4uqOECEM-VNv0w&code_challenge_method=S256)
 
 > NOTE: Authentication reference material can be found [here](https://cloud.google.com/sdk/auth_success)
 
