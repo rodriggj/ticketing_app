@@ -28,3 +28,10 @@
 <p align="center">
     <img src="https://user-images.githubusercontent.com/8760590/160296715-73eea169-5536-4e38-bd04-84def9626a9e.png" width=450 height=200>
 </p>
+
+<hr>
+
+# References
+- [ ] [Stubhub](https://www.stubhub.com/)
+- [ ] [Skaffold](https://skaffold.dev/docs/install/)
+- [ ] [Nginx-Ingress](https://kubernetes.github.io/ingress-nginx/)
