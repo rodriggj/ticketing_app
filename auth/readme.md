@@ -290,3 +290,9 @@ gke-cluster-1-default-pool-d8a018f7-04l3   Ready    <none>   14m   v1.21.9-gke.1
 gke-cluster-1-default-pool-d8a018f7-05f9   Ready    <none>   14m   v1.21.9-gke.1002
 gke-cluster-1-default-pool-d8a018f7-1j6d   Ready    <none>   14m   v1.21.9-gke.1002
 ```
+
+## Configure `Skaffold`
+
+1. Go to `GCP Dashboard`, and on the menu options select `Cloud Build`, and enable `CI/CD / Google Cloud Build API`
+
+2. Update the `skaffold.yaml` file and configure to use `Google Cloud Build`.
