@@ -295,4 +295,6 @@ gke-cluster-1-default-pool-d8a018f7-1j6d   Ready    <none>   14m   v1.21.9-gke.1
 
 1. Go to `GCP Dashboard`, and on the menu options select `Cloud Build`, and enable `CI/CD / Google Cloud Build API`
 
-2. Update the `skaffold.yaml` file and configure to use `Google Cloud Build`.
+2. Update the `skaffold.yaml` file and configure to use `Google Cloud Build`. Open the `skaffold.yaml` file and update as so to include the `ticketing-dev` project id that you would get from Google. 
+
+```
