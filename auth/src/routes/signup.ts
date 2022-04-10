@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator'
 import { User } from '../models/users'
 import { RequestValidationError } from '../errors/request-validation-error'
 import { BadRequestError } from '../errors/bad-request-error'
+import jwt from 'jsonwebtoken'
 
 const router = express.Router()
 
@@ -34,12 +35,22 @@ async (req: Request, res: Response) => {
         }
 
         // If User does not exist we will Hash Password
+        //   - this is being done with our services/password.ts file
 
         // We will then create the User Document in mongodb
         const user = User.build({ email, password })
         await user.save()
 
-        // Send back to the user some token for Auth
+        // Generate JWT
+        const userJwt = jwt.sign({
+            id: user.id,
+            email: user.email
+        }, 'asdf')
+
+        // Save it on the Session Object
+        req.session = {
+            jwt: userJwt
+        }
 
         res.status(201).send(user)
     }
