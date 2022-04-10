@@ -1,7 +1,7 @@
 import express, { Request, Response }from 'express'
 import { body, validationResult } from 'express-validator'
+import { User } from '../models/users'
 import { RequestValidationError } from '../errors/request-validation-error'
-import { DatabaseConnectionError } from '../errors/database-connection-error'
 
 const router = express.Router()
 
@@ -16,7 +16,7 @@ router.post(
       .isLength({min:4, max:20})
       .withMessage('Password must be between 4 and 20 characters')
 ], 
-(req: Request, res: Response) => {
+async (req: Request, res: Response) => {
         const errors = validationResult(req)
 
         if(!errors.isEmpty()) {
@@ -25,10 +25,22 @@ router.post(
 
         const { email, password } = req.body
 
-        console.log('Creating a user...')
-        throw new DatabaseConnectionError()
+        // Query existing User Documents to see if User already exists
+        const existingUser = await User.findOne({ email })
+        if(existingUser) {
+            console.log('Email already exists.')
+            return res.send({})
+        }
 
-        res.send({})
+        // If User does not exist we will Hash Password
+
+        // We will then create the User Document in mongodb
+        const user = User.build({ email, password })
+        await user.save()
+
+        // Send back to the user some token for Auth
+
+        res.status(201).send(user)
     }
 )
 
