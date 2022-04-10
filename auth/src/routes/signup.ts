@@ -2,6 +2,7 @@ import express, { Request, Response }from 'express'
 import { body, validationResult } from 'express-validator'
 import { User } from '../models/users'
 import { RequestValidationError } from '../errors/request-validation-error'
+import { BadRequestError } from '../errors/bad-request-error'
 
 const router = express.Router()
 
@@ -29,7 +30,7 @@ async (req: Request, res: Response) => {
         const existingUser = await User.findOne({ email })
         if(existingUser) {
             console.log('Email already exists.')
-            return res.send({})
+            throw new BadRequestError('Email already exists.')
         }
 
         // If User does not exist we will Hash Password
