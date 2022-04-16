@@ -25,7 +25,7 @@ async (req: Request, res: Response) => {
         // Query existing User Documents to see if User already exists
         const existingUser = await User.findOne({ email })
         if(existingUser) {
-            console.log('Email already exists.')
+            // console.log('Email already exists.')
             throw new BadRequestError('Email already exists.')
         }
 
